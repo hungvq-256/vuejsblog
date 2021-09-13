@@ -1,0 +1,95 @@
+/*primary colors*/
+$white-cl: #fff;
+$black-cl: #000;
+
+/*global text color*/
+$text-cl: #222;
+$text-black-cl: #000;
+
+/*global bg color*/
+$main-bg-cl: #000;
+$black-bg-cl: #000;
+
+// timing transition
+$t: 0.4s;
+$cubic: cubic-bezier(0.84, 0.13, 0.33, 0.97);
+
+/*font families*/
+$font-stack: "Open Sans", sans-serif;
+$font-main: arial;
+
+/*headings typo*/
+$fz-text: 16px;
+$lh-text: normal;
+
+$fz-text-m: 16px;
+$lh-text-m: normal;
+$hdheight: 90px;
+@media (max-width: 991px) {
+    $hdheight: 60px;
+}
+$fashion-cl: #ff0000;
+$travel-cl: #9848f6;
+$food-cl: #0000ff;
+$tech-cl: #ffa500;
+
+// $text-cl: #000000;
+// $subtext-cl: #999999;
+// $bg-cl: #f7f8f9;
+// $bgsection-cl: #ffffff;
+// $hover-cl: #9848f6;
+
+.lightmode {
+    --text-cl: #000000;
+    --subtext-cl: #999999;
+    --bg-cl: #f7f8f9;
+    --bgsection-cl: #ffffff;
+    --socialIconBorder-cl: #00000010;
+    --btnMode-cl: #9848f6;
+    --btnTop-cl: #ffffff;
+}
+.darkmode {
+    --text-cl: #ffffff;
+    --subtext-cl: #a7a7a7;
+    --bg-cl: #1c2733;
+    --bgsection-cl: #18212b;
+    --socialIconBorder-cl: #adadad;
+    --btnMode-cl: #ffffff;
+    --btnTop-cl: #000000;
+}
+$text-cl: var(--text-cl);
+$subtext-cl: var(--subtext-cl);
+$bg-cl: var(--bg-cl);
+$bgsection-cl: var(--bgsection-cl);
+$socialIconBorder-cl: var(--socialIconBorder-cl);
+$btnMode-cl: var(--btnMode-cl);
+$btnTop-cl: var(--btnTop-cl);
+$hover-cl: #9848f6;
+
+$pd-section: 15px;
+$border-radius: 6px;
+$mgbottom-section: 20px;
+$blogimg-height: 90px;
+$hd-height: 70px;
+
+@media (max-width: 991px) {
+    $blogimg-height: 100px;
+}
+//============================================================//
+
+/*BOXED LAYOUT*/
+$container-max-width: 1920px;
+$container-width: 1400px; // tùy thuộc vào container của bản thiết kế mà chỉnh sửa cho hợp lý
+
+/*GRID - media queries breakpoints*/
+$xxs-min: 576px; // CÓ THỂ TÙY CHỈNH
+$xs-min: 768px; // KHÔNG THAY ĐỔI
+$sm-min: 992px; // KHÔNG THAY ĐỔI
+$md-min: 1200px; // KHÔNG THAY ĐỔI
+$lg-min: 1600px; // CÓ THỂ TÙY CHỈNH
+
+$xxs-max: ($xxs-min - 1); // Small Mobile
+$xs-max: ($xs-min - 1); // Mobile
+$sm-max: ($sm-min - 1); // Tablet
+$md-max: ($md-min - 1); // Desktop
+$lg-max: ($lg-min - 1); // Large Desktop
