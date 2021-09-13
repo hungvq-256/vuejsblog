@@ -143,7 +143,14 @@ export default {
   flex-direction: column;
   min-height: 100vh;
   background: $bg-cl;
+  main {
+    margin-bottom: 52px;
+  }
   footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     display: flex;
     align-items: center;
     background: $bgsection-cl;
@@ -190,10 +197,10 @@ export default {
       &-upicon {
         position: absolute;
         top: 50%;
-        left: 2px;
-        width: 16px;
-        height: 16px;
-        border: 3px solid;
+        left: 3px;
+        width: 15px;
+        height: 15px;
+        border: 2px solid;
         border-color: $btnTop-cl transparent transparent $btnTop-cl;
         transform: rotate(45deg) translateY(-50%);
       }

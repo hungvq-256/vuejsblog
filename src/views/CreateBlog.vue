@@ -382,12 +382,15 @@ export default {
         select {
           width: 100%;
           font-size: 1.5rem;
+          // color: $text-cl;
           cursor: pointer;
           padding: 2px 5px;
           border-radius: 4px;
+          background: #ffffff;
           option {
             cursor: pointer;
             font-size: 1.5rem;
+            // color: $text-cl;
           }
         }
         &:before {

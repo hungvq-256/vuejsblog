@@ -1,24 +1,29 @@
 <template>
-  <div class="mycomments" v-if="blogs" ref="blogstoggle">
-    <div class="comments" v-for="(blog, idx) in blogs" :key="blog.blogId">
-      <div class="comments__headerbar" @click="handleToggleDisplay(idx)">
-        <p class="comments__headerbar-category">{{ blog.category }}</p>
-        <p class="comments__headerbar-title">{{ blog.title }}</p>
-        <i class="comments__headerbar-icon">
-          <down-arrow />
-        </i>
+  <div class="mycommentswrapper">
+    <div class="mycomments" v-if="blogs" ref="blogstoggle">
+      <div class="comments" v-for="(blog, idx) in blogs" :key="blog.blogId">
+        <div class="comments__headerbar" @click="handleToggleDisplay(idx)">
+          <p class="comments__headerbar-category">{{ blog.category }}</p>
+          <p class="comments__headerbar-title">{{ blog.title }}</p>
+          <i class="comments__headerbar-icon">
+            <down-arrow />
+          </i>
+        </div>
+        <div class="comments__list">
+          <router-link
+            class="comments__list-item"
+            v-for="(comment, idx) in blog.comments"
+            :key="comment.commentId"
+            :to="`/${blog.category}/${blog.blogId}`"
+          >
+            <span class="index">{{ idx + 1 }}.</span>
+            <span>{{ comment.comment }}</span>
+          </router-link>
+        </div>
       </div>
-      <div class="comments__list">
-        <router-link
-          class="comments__list-item"
-          v-for="(comment, idx) in blog.comments"
-          :key="comment.commentId"
-          :to="`/${blog.category}/${blog.blogId}`"
-        >
-          <span class="index">{{ idx + 1 }}.</span>
-          <span>{{ comment.comment }}</span>
-        </router-link>
-      </div>
+    </div>
+    <div class="loading" v-else>
+      <loading class="loadingicon" />
     </div>
   </div>
 </template>
@@ -27,6 +32,7 @@
 import { db } from "../../../firebase/firebaseInit";
 import DownArrow from "../../../assets/Icons/down-arrow.svg";
 import { mapState } from "vuex";
+import Loading from "../../../components/Loading.vue";
 export default {
   name: "MyComments",
   data() {
@@ -36,6 +42,7 @@ export default {
   },
   components: {
     DownArrow,
+    Loading,
   },
   created() {
     this.getCommentsByBlogs();
@@ -97,85 +104,94 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mycomments {
-  .comments {
-    &:not(:first-child) {
-      margin-top: 10px;
-    }
-    &__headerbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border: 0.5px solid #ccc;
-      border-radius: 5px;
-      padding: 6px;
-      cursor: pointer;
-      &-category {
-        font-size: 1.4rem;
-        color: $text-cl;
-        flex: 0 0 35px;
-        padding: 5px 4px;
-        background: coral;
-        text-align: center;
-        border-radius: 5px;
+.mycommentswrapper {
+  height: 100%;
+  .mycomments {
+    .comments {
+      &:not(:first-child) {
+        margin-top: 10px;
       }
-      &-title {
-        font-size: 1.7rem;
-        color: $text-cl;
-        font-weight: 500;
-        flex-grow: 1;
-        margin-left: 15px;
-      }
-      &-icon {
+      &__headerbar {
         display: flex;
-        width: 10px;
-        transform: rotate(0deg);
-        transition: 0.2s;
-        svg {
-          height: 10px;
-          fill: $text-cl;
-        }
-      }
-    }
-    &.toggle {
-      .comments__list {
-        display: block;
-      }
-      .comments__headerbar {
-        &-icon {
-          transform: rotate(180deg);
-          transition: 0.2s;
-        }
-      }
-    }
-    &__list {
-      padding: 6px;
-      border: 0.5px solid #e7e7e7;
-      margin-top: 8px;
-      border-radius: 5px;
-      display: none;
-      &-item {
-        font-size: 1.5rem;
-        padding: 7px 0;
-        display: block;
-        color: $text-cl;
+        align-items: center;
+        justify-content: space-between;
+        border: 0.5px solid #ccc;
+        border-radius: 5px;
+        padding: 6px;
         cursor: pointer;
-        &:not(:first-child) {
-          border-top: 0.5px solid #e7e7e7;
+        &-category {
+          font-size: 1.4rem;
+          color: $text-cl;
+          flex: 0 0 35px;
+          padding: 5px 4px;
+          background: coral;
+          text-align: center;
+          border-radius: 5px;
         }
-        &:hover {
-          color: $hover-cl;
+        &-title {
+          font-size: 1.7rem;
+          color: $text-cl;
+          font-weight: 500;
+          flex-grow: 1;
+          margin-left: 15px;
         }
-        span {
-          &.index {
-            display: inline-block;
-            color: $text-cl;
-            width: 17px;
-            text-align: center;
+        &-icon {
+          display: flex;
+          width: 10px;
+          transform: rotate(0deg);
+          transition: 0.2s;
+          svg {
+            height: 10px;
+            fill: $text-cl;
+          }
+        }
+      }
+      &.toggle {
+        .comments__list {
+          display: block;
+        }
+        .comments__headerbar {
+          &-icon {
+            transform: rotate(180deg);
+            transition: 0.2s;
+          }
+        }
+      }
+      &__list {
+        padding: 6px;
+        border: 0.5px solid #e7e7e7;
+        margin-top: 8px;
+        border-radius: 5px;
+        display: none;
+        &-item {
+          font-size: 1.5rem;
+          padding: 7px 0;
+          display: block;
+          color: $text-cl;
+          cursor: pointer;
+          &:not(:first-child) {
+            border-top: 0.5px solid #e7e7e7;
+          }
+          &:hover {
+            color: $hover-cl;
+          }
+          span {
+            &.index {
+              display: inline-block;
+              color: $text-cl;
+              width: 17px;
+              text-align: center;
+            }
           }
         }
       }
     }
+  }
+  .loading {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

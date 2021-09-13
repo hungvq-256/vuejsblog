@@ -323,7 +323,6 @@ export default {
         }
       }
       .comment {
-        position: relative;
         &__curveline {
           position: absolute;
           top: -82px;
@@ -367,16 +366,6 @@ export default {
     align-items: flex-start;
     width: 100%;
     position: relative;
-    &:before {
-      content: "";
-      position: absolute;
-      top: 0px;
-      left: 14px;
-      width: 2px;
-      height: 100%;
-      background: #ccc;
-      display: none;
-    }
     &.addline {
       &:before {
         display: block;
@@ -417,7 +406,7 @@ export default {
       margin-left: 10px;
       width: 100%;
       .textbox {
-        background: #f0f2f5;
+        background: $commentbg-cl;
         padding: 7px;
         border-radius: 8px;
         margin-bottom: 5px;
@@ -426,11 +415,13 @@ export default {
         width: 100%;
         &__name {
           font-size: 1.3rem;
+          color: $text-cl;
           font-weight: 600;
           margin-bottom: 5px;
         }
         &__comment {
           font-size: 1.4rem;
+          color: $text-cl;
           line-height: 16px;
         }
       }

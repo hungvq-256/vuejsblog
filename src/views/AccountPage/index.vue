@@ -28,8 +28,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .accountpage {
-  margin-top: 20px;
-  height: calc(100vh - 90px);
+  margin: 20px 0;
+  height: calc(100vh - 162px);
   @media (max-width: 767px) {
     height: initial;
   }
@@ -68,6 +68,7 @@ export default {
       border-radius: 6px;
       position: relative;
       padding: 15px;
+      overflow: auto;
       @media (max-width: 767px) {
         margin-top: 20px;
         height: 62vh;

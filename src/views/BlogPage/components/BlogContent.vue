@@ -48,6 +48,16 @@
                 <img :src="socialImg(item)" :alt="item" />
               </i>
             </div>
+            <div class="socialitem">
+              <i class="socialitem__img">
+                <email-icon />
+              </i>
+            </div>
+            <div class="socialitem">
+              <i class="socialitem__img">
+                <printer-icon />
+              </i>
+            </div>
           </div>
         </div>
         <div class="ql-snow">
@@ -61,6 +71,16 @@
               <img :src="socialImg(item)" :alt="item" />
             </i>
           </div>
+          <div class="socialitem">
+            <i class="socialitem__img">
+              <email-icon />
+            </i>
+          </div>
+          <div class="socialitem">
+            <i class="socialitem__img">
+              <printer-icon />
+            </i>
+          </div>
         </div>
       </div>
     </div>
@@ -70,6 +90,8 @@
 <script>
 import ClockIcon from "../../../assets/Icons/clock-regular.svg";
 import CommentIcon from "../../../assets/Icons/comment-regular.svg";
+import EmailIcon from "../../../assets/social-icon/email.svg";
+import PrinterIcon from "../../../assets/social-icon/printer.svg";
 import { mapState, mapGetters } from "vuex";
 import Loading from "../../../components/Loading.vue";
 export default {
@@ -78,6 +100,8 @@ export default {
     ClockIcon,
     CommentIcon,
     Loading,
+    EmailIcon,
+    PrinterIcon,
   },
   props: {
     sentBlogToParentEle: {
@@ -99,8 +123,6 @@ export default {
         "reddit",
         "linkedin",
         "tumblr",
-        "email",
-        "printer",
       ],
       preValue: 0,
       scrollUp: false,
@@ -348,6 +370,11 @@ export default {
               top: 50%;
               left: 50%;
               transform: translate(-50%, -50%);
+              svg {
+                width: 100%;
+                height: 100%;
+                fill: $text-cl;
+              }
             }
           }
         }
@@ -387,6 +414,11 @@ export default {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
+          svg {
+            width: 100%;
+            height: 100%;
+            fill: $text-cl;
+          }
         }
       }
     }

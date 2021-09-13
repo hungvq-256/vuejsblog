@@ -47,15 +47,17 @@ $tech-cl: #ffa500;
     --socialIconBorder-cl: #00000010;
     --btnMode-cl: #9848f6;
     --btnTop-cl: #ffffff;
+    --commentbg-cl: #f0f2f5;
 }
 .darkmode {
-    --text-cl: #ffffff;
+    --text-cl: #e4e6eb;
     --subtext-cl: #a7a7a7;
     --bg-cl: #1c2733;
     --bgsection-cl: #18212b;
     --socialIconBorder-cl: #adadad;
     --btnMode-cl: #ffffff;
     --btnTop-cl: #000000;
+    --commentbg-cl: #3a3b3c;
 }
 $text-cl: var(--text-cl);
 $subtext-cl: var(--subtext-cl);
@@ -64,6 +66,7 @@ $bgsection-cl: var(--bgsection-cl);
 $socialIconBorder-cl: var(--socialIconBorder-cl);
 $btnMode-cl: var(--btnMode-cl);
 $btnTop-cl: var(--btnTop-cl);
+$commentbg-cl: var(--commentbg-cl);
 $hover-cl: #9848f6;
 
 $pd-section: 15px;
