@@ -137,14 +137,18 @@ export default {
           // get user info by comment
           let comment = doc.data();
           try {
-            // use recruit to get sub comments
-            let subComments = await this.fetchCommentsByCollection(
+            // use recursion to get sub comments and return promise array
+            let subCommentsPromise = await this.fetchCommentsByCollection(
               collectionUrl,
               comment.commentId
             );
-            if (Array.isArray(subComments)) {
-              subComments = await Promise.all(subComments);
-              subComments = subComments.sort((a, b) => a.created - b.created);
+            let subCommentsSorted;
+            //check subComments is exist
+            if (Array.isArray(subCommentsPromise)) {
+              let subComments = await Promise.all(subCommentsPromise);
+              subCommentsSorted = subComments.sort(
+                (a, b) => a.created - b.created
+              );
             }
             let user = await db.collection("users").doc(comment.userId).get();
             let { userId, imgUrl, userName } = user.data();
@@ -153,7 +157,7 @@ export default {
               userId,
               imgUrl,
               userName,
-              subComments,
+              subComments: subCommentsSorted,
             };
           } catch (err) {
             console.log(err.message);

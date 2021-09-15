@@ -63,7 +63,35 @@
             </div>
           </div>
         </div>
-        <i class="loupeicon"><loupe-icon /></i>
+        <div class="search">
+          <i class="search__loupeicon" @click.stop="handleToggleSearchBar"
+            ><loupe-icon
+          /></i>
+          <div :class="handleAddClassSearchBar">
+            <input
+              class="search__box-input"
+              type="text"
+              v-model="searchText"
+              ref="searchInputRef"
+            />
+            <ul class="search__box-list" v-if="searchText">
+              <li v-for="result in resultSearch" :key="result.blogId">
+                <router-link
+                  :to="{
+                    name: 'BlogPage',
+                    params: {
+                      category: result.category,
+                      blogId: result.blogId,
+                    },
+                  }"
+                  >{{ result.title }}</router-link
+                >
+              </li>
+              <p class="emptysearch" v-if="emptySearch">Not found</p>
+            </ul>
+            <div class="modal" @click="handleToggleSearchBar"></div>
+          </div>
+        </div>
         <i class="menumobileicon" v-on:click.stop="showMenu = !showMenu">
           <menu-icon />
         </i>
@@ -91,6 +119,7 @@
         </ul>
       </div>
     </transition>
+    <div class="modal" v-show="showMenu"></div>
   </nav>
 </template>
 
@@ -106,6 +135,10 @@ export default {
   data() {
     return {
       showMenu: false,
+      searchText: "",
+      resultSearch: [],
+      emptySearch: false,
+      toggleDisplaySearch: false,
     };
   },
   components: {
@@ -121,8 +154,11 @@ export default {
     });
   },
   computed: {
-    ...mapState(["user", "getUserLoading"]),
+    ...mapState(["user", "getUserLoading", "blogList"]),
     ...mapGetters(["capitalLetter"]),
+    handleAddClassSearchBar() {
+      return this.toggleDisplaySearch ? "search__box active" : "search__box";
+    },
   },
   methods: {
     ...mapMutations(["accoutLogout"]),
@@ -142,6 +178,50 @@ export default {
       let accountRef = this.$refs.accountdrop;
       accountRef?.classList.remove("open");
     },
+    handleSearch() {
+      if (this.searchText.length) {
+        let blogId = this.$route.params.blogId;
+        let filterBlogs = this.blogList.filter((blog) => {
+          if (
+            (blog.title.toLowerCase().includes(this.searchText.toLowerCase()) ||
+              blog.category
+                .toLowerCase()
+                .includes(this.searchText.toLowerCase())) &&
+            blog.blogId !== blogId
+          ) {
+            return blog;
+          }
+        });
+        if (filterBlogs.length) {
+          this.emptySearch = false;
+          this.resultSearch = filterBlogs;
+        } else {
+          this.emptySearch = true;
+          this.resultSearch = [];
+        }
+      } else {
+        this.resultSearch = [];
+        this.emptySearch = false;
+      }
+    },
+    handleToggleSearchBar() {
+      this.toggleDisplaySearch = !this.toggleDisplaySearch;
+      this.searchText = "";
+      if (this.toggleDisplaySearch) {
+        this.$nextTick(() => {
+          this.$refs.searchInputRef.focus();
+        });
+      }
+    },
+    hiddenToggleSearchBar() {
+      this.toggleDisplaySearch = false;
+    },
+  },
+  watch: {
+    searchText() {
+      this.handleSearch();
+    },
+    $route: "hiddenToggleSearchBar",
   },
 };
 </script>
@@ -322,18 +402,96 @@ export default {
         fill: $text-cl;
       }
     }
-    .loupeicon {
-      width: 20px;
-      display: flex;
-      margin-right: 10px;
-      cursor: pointer;
-      svg {
-        height: 20px;
-        fill: $text-cl;
+    .search {
+      position: relative;
+      @media (max-width: 991px) {
+        margin-right: 10px;
       }
-      &:hover {
+      &__loupeicon {
+        width: 20px;
+        display: flex;
+        cursor: pointer;
         svg {
-          fill: $hover-cl;
+          height: 20px;
+          fill: $text-cl;
+        }
+        &:hover {
+          svg {
+            fill: $hover-cl;
+          }
+        }
+      }
+      &__box {
+        position: absolute;
+        z-index: 10;
+        right: 25px;
+        top: -7px;
+        width: 50px;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.2s linear;
+        &.active {
+          width: 300px;
+          opacity: 1;
+          pointer-events: auto;
+          transition: 0.2s linear;
+          @media (max-width: 767px) {
+            width: 220px;
+          }
+        }
+        &-input {
+          width: 100%;
+          height: 35px;
+          border: 1px solid $subtext-cl;
+          border-radius: 10px;
+          outline: none;
+          font-size: 16px;
+          background: $commentbg-cl;
+          color: $text-cl;
+          padding: 0 5px;
+        }
+        &-list {
+          max-height: 300px;
+          width: 100%;
+          border: 1px solid $borderbt-cl;
+          margin-top: 5px;
+          padding: 5px;
+          border-radius: 5px;
+          background: $bgsection-cl;
+          overflow: auto;
+          li {
+            &:hover {
+              a {
+                color: $hover-cl;
+              }
+            }
+            a {
+              display: block;
+              padding: 7px 0;
+              font-size: 1.5rem;
+              color: $text-cl;
+            }
+            &:not(:first-child) {
+              a {
+                border-top: 0.5px solid #cccccc;
+              }
+            }
+          }
+          .emptysearch {
+            padding: 30px 0;
+            text-align: center;
+            font-size: 1.5rem;
+            color: $text-cl;
+          }
+        }
+        .modal {
+          position: fixed;
+          z-index: -1;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: transparent;
         }
       }
     }
@@ -350,7 +508,8 @@ export default {
   width: 50%;
   display: none;
   p {
-    font-size: 1.7rem;
+    font-size: 1.8rem;
+    font-weight: 500;
     margin: 15px 0;
   }
   &__list {
@@ -367,6 +526,15 @@ export default {
   @media (max-width: 991px) {
     display: block;
   }
+}
+.modal {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
 }
 .menumobile-enter-active,
 .menumobile-leave-active {

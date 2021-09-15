@@ -66,12 +66,15 @@ export default {
       } else {
         this.$store.commit("cancelGetUser");
         this.hasUserInfo = true;
-        if (
-          this.$route.name === "CreateBlog" ||
-          this.$route.pathname === "/account"
-        ) {
-          this.$router.push({ name: "Home" });
-        }
+      }
+      if (
+        !user &&
+        (this.$route.name === "CreateBlog" ||
+          this.$route.name === "Account" ||
+          this.$route.name === "MyBlogs" ||
+          this.$route.name === "MyComments")
+      ) {
+        this.$router.push({ name: "Home" });
       }
     });
     if (!this.blogList.length) {

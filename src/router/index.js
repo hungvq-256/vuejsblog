@@ -22,17 +22,17 @@ const routes = [
     children: [
       {
         path: "blogs",
-        // name: "MyBlogs",
+        name: "MyBlogs",
         component: MyBlogs,
       },
       {
         path: "comments",
-        // name: "MyBlogs",
+        name: "MyComments",
         component: MyComments,
       },
       {
         path: "",
-        // name: "Account",
+        name: "Account",
         component: MyAccount,
       },
     ]

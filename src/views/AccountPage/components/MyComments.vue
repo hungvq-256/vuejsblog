@@ -2,8 +2,18 @@
   <div class="mycommentswrapper">
     <div class="mycomments" v-if="blogs" ref="blogstoggle">
       <div class="comments" v-for="(blog, idx) in blogs" :key="blog.blogId">
-        <div class="comments__headerbar" @click="handleToggleDisplay(idx)">
-          <p class="comments__headerbar-category">{{ blog.category }}</p>
+        <div class="comments__headerbar" @click.stop="handleToggleDisplay(idx)">
+          <p
+            class="comments__headerbar-category"
+            :style="{ background: categoriesColor(blog.category) }"
+          >
+            {{
+              blog.category.replace(
+                blog.category[0],
+                blog.category[0].toUpperCase()
+              )
+            }}
+          </p>
           <p class="comments__headerbar-title">{{ blog.title }}</p>
           <i class="comments__headerbar-icon">
             <down-arrow />
@@ -21,6 +31,9 @@
           </router-link>
         </div>
       </div>
+      <div class="emptycomment" v-if="!blogs.length">
+        <p>You don't have any comments</p>
+      </div>
     </div>
     <div class="loading" v-else>
       <loading class="loadingicon" />
@@ -31,7 +44,7 @@
 <script>
 import { db } from "../../../firebase/firebaseInit";
 import DownArrow from "../../../assets/Icons/down-arrow.svg";
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import Loading from "../../../components/Loading.vue";
 export default {
   name: "MyComments",
@@ -46,8 +59,15 @@ export default {
   },
   created() {
     this.getCommentsByBlogs();
+    window.addEventListener("click", () => {
+      let blogsToggleRef = this.$refs.blogstoggle;
+      blogsToggleRef?.children.forEach((blog) => {
+        blog.classList.remove("toggle");
+      });
+    });
   },
   methods: {
+    ...mapMutations(["setScrollToComment"]),
     async getCommentsByBlogs() {
       try {
         let getBlogsRequest = await db.collection("blogs").get();
@@ -60,26 +80,30 @@ export default {
               .get();
             //check the comment collection is exist
             if (getCommentsRequest.docs.length) {
-              let getComments = getCommentsRequest.docs.map((doc) => {
-                let comment = doc.data();
-                return comment.userId === this.user.userId && doc.data();
-              });
-              //remove falsy value from comments arr
-              let filterComments = getComments.filter(Boolean);
-              return (
-                //check user has comment in blog
-                !!filterComments.length && {
-                  blogId: blog.blogId,
-                  title: blog.title,
-                  category: blog.category,
-                  comments: filterComments,
-                }
+              let subCommentsPromise = await this.fetchCommentsByCollection(
+                null,
+                null,
+                blog.blogId
               );
+              if (Array.isArray(subCommentsPromise)) {
+                let result = await Promise.all(subCommentsPromise);
+                let flattenResult = this.flattenArr(result);
+                let filterCommentsByUserId = flattenResult.filter(
+                  (comment) => comment.userId === this.user.userId
+                );
+                if (filterCommentsByUserId.length) {
+                  return {
+                    blogId: blog.blogId,
+                    title: blog.title,
+                    category: blog.category,
+                    comments: filterCommentsByUserId,
+                  };
+                }
+              }
             }
           } catch (err) {
             console.log(err.message);
           }
-          return;
         });
         let result = await Promise.all(getCommentPromise);
         this.blogs = [...result.filter(Boolean)];
@@ -96,9 +120,77 @@ export default {
         }
       });
     },
+    async fetchCommentsByCollection() {
+      let [preCollectionUrl, commentId, blogId] = arguments;
+      let collectionUrl;
+      //check use original url or preUrl
+      if (preCollectionUrl) {
+        collectionUrl = `${preCollectionUrl}/${commentId}/comments`;
+      } else {
+        collectionUrl = `blogs/${blogId}/comments`;
+      }
+      let commentsCollectionRef = db.collection(collectionUrl);
+      try {
+        let getCommentsByCollection = await commentsCollectionRef.get();
+        //check check if comments collection is empty then return
+        if (!getCommentsByCollection.docs.length) return;
+        let commentsPromise = getCommentsByCollection.docs.map(async (doc) => {
+          let comment = doc.data();
+          try {
+            let result = [];
+            // use recursion to get sub comments and return promise array
+            let subCommentsPromise = await this.fetchCommentsByCollection(
+              collectionUrl,
+              comment.commentId
+            );
+            if (comment.userId === this.user.userId) {
+              result = result.concat(comment);
+            }
+            //check subComments is exist
+            if (Array.isArray(subCommentsPromise)) {
+              let subComments = await Promise.all(subCommentsPromise);
+              let subCommentsSorted = subComments.sort(
+                (a, b) => a.created - b.created
+              );
+              result = result.concat(subCommentsSorted);
+            }
+            return result;
+          } catch (err) {
+            console.log(err.message);
+          }
+        });
+        return commentsPromise;
+      } catch (err) {
+        console.log(err.message);
+      }
+    },
+    flattenArr(arr) {
+      return arr.reduce((acc, comment) => {
+        if (Array.isArray(comment)) {
+          return acc.concat(this.flattenArr(comment));
+        } else {
+          return acc.concat(comment);
+        }
+      }, []);
+    },
+    categoriesColor(categories) {
+      let colorObject = {
+        fashion: "#ff0000",
+        travel: "#9848f6",
+        food: "#0000ff",
+        technology: "#ffa500",
+      };
+      return colorObject[categories];
+    },
   },
   computed: {
     ...mapState(["user"]),
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.name === "BlogPage" && from.name === "MyComments") {
+      this.setScrollToComment();
+    }
+    next();
   },
 };
 </script>
@@ -107,6 +199,7 @@ export default {
 .mycommentswrapper {
   height: 100%;
   .mycomments {
+    height: 100%;
     .comments {
       &:not(:first-child) {
         margin-top: 10px;
@@ -121,7 +214,7 @@ export default {
         cursor: pointer;
         &-category {
           font-size: 1.4rem;
-          color: $text-cl;
+          color: #ffffff;
           flex: 0 0 35px;
           padding: 5px 4px;
           background: coral;
@@ -129,7 +222,7 @@ export default {
           border-radius: 5px;
         }
         &-title {
-          font-size: 1.7rem;
+          font-size: 1.5rem;
           color: $text-cl;
           font-weight: 500;
           flex-grow: 1;
@@ -184,6 +277,17 @@ export default {
             }
           }
         }
+      }
+    }
+    .emptycomment {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      p {
+        font-size: 1.5rem;
+        color: $text-cl;
       }
     }
   }

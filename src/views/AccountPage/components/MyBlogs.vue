@@ -1,6 +1,6 @@
 <template>
   <div class="myblogs">
-    <ul class="bloglist">
+    <ul class="bloglist" v-if="myBlogs.length">
       <li v-for="(blog, index) in myBlogs" :key="index" class="bloglist__item">
         <div class="bloglist__item-text">
           <span class="bloglist__item-order">{{ index + 1 }}.</span>
@@ -22,6 +22,9 @@
         </div>
       </li>
     </ul>
+    <div class="emptyblogs" v-else>
+      <p>You don't have any blogs</p>
+    </div>
   </div>
 </template>
 
@@ -60,6 +63,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .myblogs {
+  height: 100%;
   .bloglist {
     &__item {
       display: flex;
@@ -99,6 +103,16 @@ export default {
           }
         }
       }
+    }
+  }
+  .emptyblogs {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    p {
+      font-size: 1.5rem;
+      color: $text-cl;
     }
   }
 }

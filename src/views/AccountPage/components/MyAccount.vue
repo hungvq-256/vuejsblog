@@ -6,9 +6,7 @@
         class="avatarimg"
         v-else
         :style="{ backgroundImage: `url(${user.imgUrl})` }"
-      >
-        <!-- <div :style="{ backgroundImage: `url(${user.imgUrl})` }"></div> -->
-      </div>
+      ></div>
       <div class="uploadavatar">
         <label for="avatar">
           <image-icon />
@@ -19,6 +17,9 @@
           hidden
           @change.prevent="handleUploadAvatar"
         />
+      </div>
+      <div class="loading" v-if="loadingImg">
+        <loading class="loadingicon" />
       </div>
     </div>
     <div class="myaccount__info">
@@ -57,6 +58,7 @@ export default {
   data() {
     return {
       loading: false,
+      loadingImg: false,
       submitbtn: false,
     };
   },
@@ -135,6 +137,7 @@ export default {
               break;
             } // or 'paused'
             case firebase.storage.TaskState.RUNNING: {
+              this.loadingImg = true;
               console.log("Upload is running");
               break;
             } // or 'running'
@@ -181,6 +184,7 @@ export default {
                 console.log(error.message);
               });
           });
+          this.loadingImg = false;
         }
       );
     },
@@ -246,6 +250,17 @@ export default {
         }
       }
     }
+    .loading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: $bgloading-cl;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
   &__info {
     margin-top: 30px;
@@ -262,12 +277,13 @@ export default {
           margin-bottom: 5px;
         }
         input {
-          font-size: 1.6rem;
+          font-size: 1.6rem !important;
           color: $text-cl;
           border: none;
           border-bottom: 1px solid #ccc;
           border-radius: 5px;
           width: 100%;
+          background: transparent;
           &.editstate {
             border: 1px solid #ccc;
           }
@@ -284,7 +300,9 @@ export default {
           padding: 2px 8px;
           font-size: 1.6rem;
           border-radius: 5px;
+          color: $text-cl;
           border: 0.5px solid #ccc;
+          background: transparent;
           cursor: pointer;
         }
       }

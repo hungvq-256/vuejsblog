@@ -25,6 +25,7 @@ export default new Vuex.Store({
     getUserLoading: true,
     boxState: null,
     previousPath: "",
+    isScrollToComment: false,
   },
   getters: {
     capitalLetter(state) {
@@ -115,6 +116,9 @@ export default new Vuex.Store({
       if (path !== "/login" && path !== "/register") {
         state.previousPath = path;
       }
+    },
+    setScrollToComment(state) {
+      state.isScrollToComment = !state.isScrollToComment;
     }
   },
   actions: {

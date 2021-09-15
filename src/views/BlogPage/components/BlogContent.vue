@@ -254,7 +254,7 @@ export default {
     word-break: break-word;
     &__header {
       padding: 15px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid $borderbt-cl;
       .title {
         font-size: 2.2rem;
         color: $text-cl;
@@ -374,6 +374,7 @@ export default {
                 width: 100%;
                 height: 100%;
                 fill: $text-cl;
+                display: flex;
               }
             }
           }
@@ -418,6 +419,7 @@ export default {
             width: 100%;
             height: 100%;
             fill: $text-cl;
+            display: flex;
           }
         }
       }
