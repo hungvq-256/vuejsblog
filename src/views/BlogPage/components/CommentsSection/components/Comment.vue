@@ -295,6 +295,9 @@ export default {
     position: relative;
     .commentwrapper {
       position: relative;
+      &:not(:last-of-type) {
+        padding-bottom: 10px;
+      }
       &::before {
         content: "";
         position: absolute;
@@ -315,17 +318,17 @@ export default {
         .comment {
           &__curveline {
             position: absolute;
-            top: -77px;
+            top: -78px;
             left: -26px;
             width: 23px;
-            height: 94px;
+            height: 92px;
           }
         }
       }
       .comment {
         &__curveline {
           position: absolute;
-          top: -82px;
+          top: -86px;
           left: -26px;
           width: 23px;
           height: 100px;
@@ -336,13 +339,15 @@ export default {
           border-bottom-left-radius: 15px;
         }
         &__avatar {
+          width: 32px;
+          height: 32px;
           &-img {
             position: absolute;
-            top: 50%;
+            top: 0;
             left: 50%;
-            transform: translate(-50%, -50%);
-            padding-top: 78%;
-            width: 78%;
+            transform: translateX(-50%);
+            padding-top: 85%;
+            width: 85%;
           }
           &-text {
             font-size: 1.8rem;
@@ -356,7 +361,7 @@ export default {
           }
         }
         &__content {
-          margin: 4px 0 0 6px;
+          margin-left: 4px;
         }
       }
     }
@@ -374,15 +379,18 @@ export default {
     &__avatar {
       position: relative;
       z-index: 10;
-      width: 32px;
-      height: 32px;
+      width: 38px;
+      height: 38px;
       background: $bgsection-cl;
       flex-shrink: 0;
       display: inline-flex;
       align-items: flex-start;
       &-img {
-        padding-top: 100%;
-        width: 100%;
+        position: absolute;
+        top: 0;
+        left: -1px;
+        padding-top: 90%;
+        width: 90%;
         border-radius: 50px;
         background-position: center;
         background-size: cover;
@@ -403,7 +411,7 @@ export default {
     }
     &__content {
       position: relative;
-      margin-left: 10px;
+      margin-left: 4px;
       width: 100%;
       .textbox {
         background: $commentbg-cl;
