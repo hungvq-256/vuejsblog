@@ -104,6 +104,7 @@ export default {
           } catch (err) {
             console.log(err.message);
           }
+          return null;
         });
         let result = await Promise.all(getCommentPromise);
         this.blogs = [...result.filter(Boolean)];

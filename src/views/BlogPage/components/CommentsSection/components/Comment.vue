@@ -153,7 +153,7 @@ export default {
       if (filterCommentsOut.length === 1) {
         return pathCommentCollection;
       } else if (filterCommentsOut.length === 2) {
-        //get comment will has been replied to check id user
+        //get comment will be replied to check user id
         let getCommentById = this.getLocalComment(
           this.commentsList,
           reverseArrCommentId[0]
@@ -170,11 +170,11 @@ export default {
       }
     },
     getLocalComment(comments, commentId) {
-      for (let comment of comments) {
-        if (comment.commentId === commentId) {
-          return comment;
+      for (let i = 0; i < comments.length; i++) {
+        if (comments[i].commentId === commentId) {
+          return comments[i];
         }
-        let subComments = comment.subComments;
+        let subComments = comments[i].subComments;
         if (Array.isArray(subComments)) {
           let result = this.getLocalComment(subComments, commentId);
           if (result) return result;
@@ -232,7 +232,8 @@ export default {
         this.$router.push({ name: "Login" });
         return;
       }
-      EventBus.$emit("likeComment", this.getPathComment());
+      let pathComment = this.getPathComment();
+      EventBus.$emit("likeComment", pathComment);
     },
     changeColorLikeBtn(comment) {
       return comment.usersLike.includes(this.user.userId);
@@ -295,6 +296,15 @@ export default {
     position: relative;
     .commentwrapper {
       position: relative;
+      .commenttree {
+        .commentwrapper {
+          .comment {
+            &__curveline {
+              width: 19px;
+            }
+          }
+        }
+      }
       &:not(:last-of-type) {
         padding-bottom: 10px;
       }
@@ -318,7 +328,7 @@ export default {
         .comment {
           &__curveline {
             position: absolute;
-            top: -78px;
+            top: -77px;
             left: -26px;
             width: 23px;
             height: 92px;
@@ -330,7 +340,7 @@ export default {
           position: absolute;
           top: -86px;
           left: -26px;
-          width: 23px;
+          width: 24px;
           height: 100px;
           margin-right: 5px;
           border: 2px solid #ccc;
@@ -373,6 +383,13 @@ export default {
     position: relative;
     &.addline {
       &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 14px;
+        width: 2px;
+        height: 100%;
+        background: #ccc;
         display: block;
       }
     }

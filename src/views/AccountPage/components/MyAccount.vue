@@ -87,11 +87,12 @@ export default {
           .then(() => {
             this.setInputState("disabled");
             this.submitbtn = false;
+            this.loading = false;
           })
           .catch((error) => {
+            this.loading = false;
             console.log(error.message);
           });
-        this.loading = false;
       } else {
         this.setInputState("enabled");
         this.submitbtn = true;

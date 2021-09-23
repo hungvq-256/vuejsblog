@@ -54,12 +54,14 @@ export default {
       submitLoading: false,
       getCommentsLoading: true,
       errMessage: false,
+      flattenListComment: [],
     };
   },
   computed: {
     ...mapState(["user"]),
   },
   created() {
+    this.fetchComments();
     EventBus.$on("refetchComments", this.fetchComments);
     EventBus.$on("handleShowUsersLike", (usersLike) => {
       this.handleShowUsersLike(usersLike);
@@ -73,7 +75,6 @@ export default {
     window.addEventListener("click", () => {
       this.handleChangeBoxState();
     });
-    this.fetchComments();
   },
   destroyed() {
     EventBus.$off("refetchComments", this.fetchComments);
@@ -186,32 +187,34 @@ export default {
       this.getCommentsLoading = false;
     },
     getLocalComment(comments, commentId) {
-      for (let comment of comments) {
-        if (comment.commentId === commentId) {
-          return comment;
+      for (let i = 0; i < comments.length; i++) {
+        if (comments[i].commentId === commentId) {
+          return comments[i];
         }
-        let subComments = comment.subComments;
-        if (subComments) {
+        let subComments = comments[i].subComments;
+        if (Array.isArray(subComments)) {
           let result = this.getLocalComment(subComments, commentId);
           if (result) return result;
         }
       }
     },
-    async handleLikeComment(commentPath, commentId) {
-      let commentRef = db
-        .collection(`blogs/${this.blog?.blogId}/${commentPath}`)
-        .doc(commentId);
-      //get comment from comments
-      let getComment = this.getLocalComment(this.comments, commentId);
+    async handleLikeComment(commentPath, commentIdParams) {
       try {
-        // get likes and usersLike arr from comment
-        let { usersLike, commentId } = getComment;
+        let commentRef = db
+          .collection(`blogs/${this.blog?.blogId}/${commentPath}`)
+          .doc(commentIdParams);
+        //get comment from comments
+        // let getComment = this.getLocalComment(this.comments, commentIdParams);
+        let getComment = this.flattenListComment.find(
+          (comment) => comment.commentId === commentIdParams
+        );
+        let { likes, usersLike, commentId } = getComment;
         // check users have already liked comment
         if (!usersLike.includes(this.user.userId)) {
           usersLike.push(this.user.userId);
           await commentRef.update({
-            likes: getComment.likes + 1,
-            usersLike,
+            likes: likes + 1,
+            usersLike: usersLike,
           });
           //update like state in local comment
           this.setLikeStateInLocal(commentId, usersLike, 1);
@@ -221,14 +224,14 @@ export default {
             (user) => user !== this.user.userId
           );
           await commentRef.update({
-            likes: getComment.likes - 1,
+            likes: likes - 1,
             usersLike: arrWithoutUserUnlike,
           });
           // update like state in local comment
           this.setLikeStateInLocal(commentId, arrWithoutUserUnlike, -1);
         }
       } catch (err) {
-        console.log(err.message);
+        // console.log(err.message);
       }
     },
     async handleShowUsersLike(usersLike) {
@@ -274,13 +277,10 @@ export default {
       );
       this.comments = newComments;
     },
-    calcTotalComments(comments) {
+    flattenComments(comments) {
       return comments?.reduce((acc, comment) => {
         if (comment.subComments) {
-          return acc.concat(
-            comment,
-            this.calcTotalComments(comment.subComments)
-          );
+          return acc.concat(comment, this.flattenComments(comment.subComments));
         } else {
           return acc.concat(comment);
         }
@@ -293,7 +293,8 @@ export default {
     },
     $route: "fetchComments",
     comments() {
-      let commentsQuantity = this.calcTotalComments(this.comments);
+      let commentsQuantity = this.flattenComments(this.comments);
+      this.flattenListComment = commentsQuantity;
       this.commentQuantity(commentsQuantity ? commentsQuantity.length : 0);
     },
   },

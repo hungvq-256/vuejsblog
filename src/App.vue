@@ -69,10 +69,9 @@ export default {
       }
       if (
         !user &&
-        (this.$route.name === "CreateBlog" ||
-          this.$route.name === "Account" ||
-          this.$route.name === "MyBlogs" ||
-          this.$route.name === "MyComments")
+        ["CreateBlog", "Account", "MyBlogs", "MyComments"].includes(
+          this.$route.name
+        )
       ) {
         this.$router.push({ name: "Home" });
       }
