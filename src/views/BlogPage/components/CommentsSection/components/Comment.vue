@@ -299,13 +299,13 @@ export default {
       .commenttree {
         margin-left: 36px;
         .commentwrapper {
-          &:first-child {
-            .comment {
-              &__curveline {
-                top: -77px;
-              }
-            }
-          }
+          // &:first-child {
+          //   .comment {
+          //     &__curveline {
+          //       top: -77px;
+          //     }
+          //   }
+          // }
           &:before {
             left: -22px;
           }
@@ -313,7 +313,7 @@ export default {
             &__curveline {
               width: 15px;
               left: -22px;
-              top: -85px;
+              top: -77px;
             }
           }
         }
