@@ -297,10 +297,23 @@ export default {
     .commentwrapper {
       position: relative;
       .commenttree {
+        margin-left: 36px;
         .commentwrapper {
+          &:first-child {
+            .comment {
+              &__curveline {
+                top: -77px;
+              }
+            }
+          }
+          &:before {
+            left: -22px;
+          }
           .comment {
             &__curveline {
-              width: 19px;
+              width: 15px;
+              left: -22px;
+              top: -85px;
             }
           }
         }

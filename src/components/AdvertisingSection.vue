@@ -72,6 +72,9 @@ export default {
         height: 400px;
         overflow: hidden;
         border-radius: 6px;
+        @media (max-width: 991px) and (min-width: 768px) {
+          height: 600px;
+        }
         img {
           position: absolute;
           top: 50%;

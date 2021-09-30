@@ -13,8 +13,7 @@
           <div ref="sideRightRef">
             <food-section />
             <follow-us />
-            <food-section />
-            <!-- <advertising-section /> -->
+            <advertising-section />
           </div>
         </div>
       </div>

@@ -84,8 +84,8 @@
                       blogId: result.blogId,
                     },
                   }"
-                  >{{ result.title }}</router-link
-                >
+                  v-html="result.title"
+                ></router-link>
               </li>
               <p class="emptysearch" v-if="emptySearch">Not found</p>
             </ul>
@@ -178,6 +178,17 @@ export default {
       let accountRef = this.$refs.accountdrop;
       accountRef?.classList.remove("open");
     },
+    // handleHighlightResult(searchResult) {
+    //   if (this.searchText.length <= 0) return searchResult;
+    //   let text = this.searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    //   let re = new RegExp(text, "g");
+    //   console.log(re);
+    //   let result = searchResult.map((ele) => {
+    //     ele.title = ele.title.replace(re, `<mark>$&</mark>`);
+    //     return ele;
+    //   });
+    //   return result;
+    // },
     handleSearch() {
       if (this.searchText.length) {
         let blogId = this.$route.params.blogId;
@@ -192,6 +203,8 @@ export default {
             return blog;
           }
         });
+        // let text = this.handleHighlightResult(filterBlogs);
+        // console.log(text);
         if (filterBlogs.length) {
           this.emptySearch = false;
           this.resultSearch = filterBlogs;

@@ -105,15 +105,10 @@ export default {
           margin-bottom: 10px;
           margin-right: 0;
           overflow: hidden;
-          height: 140px;
-          img {
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-          }
-          @media (max-width: 991px) {
-            height: 200px;
-          }
+          height: 160px;
+          // @media (max-width: 991px) {
+          //   height: 200px;
+          // }
         }
       }
       @media (max-width: 1199px) {

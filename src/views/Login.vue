@@ -118,6 +118,7 @@ export default {
         border-radius: 6px;
         border-bottom: 1px solid $subtext-cl;
         font-size: 15px;
+        padding: 0 5px;
       }
       .errmessage {
         display: inline-block;

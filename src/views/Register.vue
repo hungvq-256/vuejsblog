@@ -160,6 +160,7 @@ export default {
         border: none;
         border-radius: 6px;
         border-bottom: 1px solid $subtext-cl;
+        padding: 0 5px;
         font-size: 15px;
       }
       .errmessage {
