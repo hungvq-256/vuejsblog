@@ -11,6 +11,7 @@ import Account from "../views/AccountPage";
 import MyAccount from "../views/AccountPage/components/MyAccount.vue";
 import MyBlogs from "../views/AccountPage/components/MyBlogs.vue";
 import MyComments from "../views/AccountPage/components/MyComments.vue";
+import Calculator from "../views/AccountPage/components/Calculator.vue";
 import CategoryPage from "../views/CategoryPage.vue";
 
 Vue.use(VueRouter);
@@ -35,7 +36,12 @@ const routes = [
         name: "Account",
         component: MyAccount,
       },
-    ]
+      {
+        path: "calculator",
+        name: "Calculator",
+        component: Calculator,
+      },
+    ],
   },
   {
     path: "/login",
@@ -60,25 +66,26 @@ const routes = [
   {
     path: "/",
     component: MainLayout,
-    children: [{
-      path: "",
-      name: "Home",
-      components: {
-        slider: Slider,
-        default: Home
-      }
-    },
-    {
-      path: ":category",
-      name: "CategoryPage",
-      component: CategoryPage,
-    },
-    {
-      path: ":category/:blogId",
-      name: "BlogPage",
-      component: BlogPage,
-    }
-    ]
+    children: [
+      {
+        path: "",
+        name: "Home",
+        components: {
+          slider: Slider,
+          default: Home,
+        },
+      },
+      {
+        path: ":category",
+        name: "CategoryPage",
+        component: CategoryPage,
+      },
+      {
+        path: ":category/:blogId",
+        name: "BlogPage",
+        component: BlogPage,
+      },
+    ],
   },
 ];
 

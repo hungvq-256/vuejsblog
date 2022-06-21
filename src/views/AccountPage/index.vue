@@ -12,6 +12,9 @@
           <li>
             <router-link to="/account/comments">My Comment</router-link>
           </li>
+          <li>
+            <router-link to="/account/calculator">Calculator</router-link>
+          </li>
         </ul>
       </div>
       <div class="mainsection">
