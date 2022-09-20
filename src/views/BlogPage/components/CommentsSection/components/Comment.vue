@@ -8,9 +8,9 @@
           :style="{ backgroundImage: `url(${comment.imgUrl})` }"
           v-if="comment.imgUrl"
         ></div>
-        <p class="comment__avatar-text" v-else>
+        <div class="comment__avatar-text" v-else>
           {{ comment.userName[0].toUpperCase() }}
-        </p>
+        </div>
       </div>
       <div class="comment__content">
         <div class="textbox">
@@ -376,9 +376,9 @@ export default {
             font-size: 1.8rem;
             font-weight: 500;
             position: absolute;
-            top: 50%;
+            top: 0;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
             height: 78%;
             width: 78%;
           }
@@ -434,8 +434,8 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100%;
-        width: 100%;
+        height: 90%;
+        width: 90%;
         border-radius: 50px;
       }
     }
